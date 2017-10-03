@@ -17,7 +17,7 @@ public class SpringRestClient {
 
     public static final String AUTH_SERVER_URI = REST_SERVICE_URI + "oauth/token";
 
-    public static final String QPM_PASSWORD_GRANT = "?grant_type=password&username=bob&password=abc123";
+    public static final String QPM_PASSWORD_GRANT = "?grant_type=password&username=bill&password=abc123";
 
     public static final String QPM_ACCESS_TOKEN = "?access_token=";
 
