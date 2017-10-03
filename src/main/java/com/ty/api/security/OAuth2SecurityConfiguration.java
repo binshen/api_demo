@@ -12,6 +12,7 @@ import org.springframework.security.config.annotation.method.configuration.Enabl
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
+import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.oauth2.provider.ClientDetailsService;
 import org.springframework.security.oauth2.provider.approval.ApprovalStore;
 import org.springframework.security.oauth2.provider.approval.TokenApprovalStore;
@@ -32,21 +33,17 @@ public class OAuth2SecurityConfiguration extends WebSecurityConfigurerAdapter {
 	@Autowired
 	private RedisConnectionFactory redisConnection;
 
-	@Bean
-	public MyUserDetailsService myUserDetailsService(){
-		return new MyUserDetailsService();
-	}
-
 	@Autowired
-    public void globalUserDetails(AuthenticationManagerBuilder auth) throws Exception {
-//        auth
-//			.userDetailsService(myUserDetailsService())
-//			.passwordEncoder(new Md5PasswordEncoder());
+	private UserDetailsService userDetailsService;
 
-		auth.inMemoryAuthentication()
-				.withUser("bill").password("abc123").roles("admin1").and()
-				.withUser("bob").password("abc123").roles("USER");
-    }
+	@Override
+	protected void configure(AuthenticationManagerBuilder auth) throws Exception{
+//		auth.inMemoryAuthentication()
+//				.withUser("bill").password("abc123").roles("admin1").and()
+//				.withUser("bob").password("abc123").roles("USER");
+
+		auth.userDetailsService(userDetailsService).passwordEncoder(new Md5PasswordEncoder());
+	}
 
     @Override
     protected void configure(HttpSecurity http) throws Exception {
@@ -65,8 +62,8 @@ public class OAuth2SecurityConfiguration extends WebSecurityConfigurerAdapter {
 
 	@Bean
 	public TokenStore tokenStore() {
-		//return new RedisTokenStore(redisConnection);
 		return new InMemoryTokenStore();
+		//return new RedisTokenStore(redisConnection);
 	}
 
 	@Bean

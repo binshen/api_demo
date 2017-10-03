@@ -21,39 +21,26 @@ public class SpringRestClient {
 
     public static final String QPM_ACCESS_TOKEN = "?access_token=";
 
-    /*
-     * Prepare HTTP Headers.
-     */
     private static HttpHeaders getHeaders(){
         HttpHeaders headers = new HttpHeaders();
         headers.setAccept(Arrays.asList(MediaType.APPLICATION_JSON));
         return headers;
     }
 
-    /*
-     * Add HTTP Authorization header, using Basic-Authentication to send client-credentials.
-     */
     private static HttpHeaders getHeadersWithClientCredentials(){
         String plainClientCredentials="my-trusted-client:secret";
         String base64ClientCredentials = new String(Base64.encodeBase64(plainClientCredentials.getBytes()));
-
         HttpHeaders headers = getHeaders();
         headers.add("Authorization", "Basic " + base64ClientCredentials);
         return headers;
     }
 
-    /*
-     * Send a POST request [on /oauth/token] to get an access-token, which will then be send with each request.
-     */
-    @SuppressWarnings({ "unchecked"})
     private static AuthToken sendTokenRequest(){
         RestTemplate restTemplate = new RestTemplate();
-
         HttpEntity<String> request = new HttpEntity<String>(getHeadersWithClientCredentials());
         ResponseEntity<Object> response = restTemplate.exchange(AUTH_SERVER_URI+QPM_PASSWORD_GRANT, HttpMethod.POST, request, Object.class);
         LinkedHashMap<String, Object> map = (LinkedHashMap<String, Object>)response.getBody();
         AuthToken token = null;
-
         if(map!=null){
             token = new AuthToken();
             token.setAccess_token((String)map.get("access_token"));
@@ -64,27 +51,20 @@ public class SpringRestClient {
             System.out.println(token);
         }else{
             System.out.println("No user exist----------");
-
         }
         return token;
     }
 
-    /*
-     * Send a GET request to get list of all users.
-     */
-    @SuppressWarnings({ "unchecked", "rawtypes" })
     private static void listAllUsers(AuthToken token){
         Assert.notNull(token, "Authenticate first please......");
 
         System.out.println("\nTesting listAllUsers API-----------");
         RestTemplate restTemplate = new RestTemplate();
-
         HttpEntity<String> request = new HttpEntity<String>(getHeaders());
-        ResponseEntity<List> response = restTemplate.exchange(REST_SERVICE_URI+"/userList/"+QPM_ACCESS_TOKEN+token.getAccess_token(),
-                HttpMethod.GET, request, List.class);
+        ResponseEntity<List> response = restTemplate.exchange(REST_SERVICE_URI+"/userList/"+QPM_ACCESS_TOKEN+token.getAccess_token(), HttpMethod.GET, request, List.class);
         List<LinkedHashMap<String, Object>> usersMap = (List<LinkedHashMap<String, Object>>)response.getBody();
-
         if(usersMap!=null){
+            System.out.println("Call listAllUsers:");
             for(LinkedHashMap<String, Object> map : usersMap){
                 System.out.println("User : id="+map.get("id")+", UserName="+map.get("username")+", Password="+map.get("password"));;
             }
@@ -93,18 +73,14 @@ public class SpringRestClient {
         }
     }
 
-    /*
-     * Send a GET request to get a specific user.
-     */
     private static void getUser(AuthToken token){
         Assert.notNull(token, "Authenticate first please......");
         System.out.println("\nTesting getUser API----------");
         RestTemplate restTemplate = new RestTemplate();
         HttpEntity<String> request = new HttpEntity<String>(getHeaders());
-        ResponseEntity<User> response = restTemplate.exchange(REST_SERVICE_URI+"/user/1"+QPM_ACCESS_TOKEN+token.getAccess_token(),
-                HttpMethod.GET, request, User.class);
+        ResponseEntity<User> response = restTemplate.exchange(REST_SERVICE_URI+"/user/1"+QPM_ACCESS_TOKEN+token.getAccess_token(), HttpMethod.GET, request, User.class);
         User user = response.getBody();
-        System.out.println(user.getUsername());
+        System.out.println("Call getUser => " + user.getUsername());
     }
 
     public static void main(String args[]){

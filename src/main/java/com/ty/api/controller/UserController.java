@@ -20,7 +20,7 @@ public class UserController {
     @Autowired
     UserService userService;
 
-    @PreAuthorize("hasAnyRole('USER', 'admin1')")  //@PreAuthorize("hasRole('USER')")
+    @PreAuthorize("hasAnyRole('USER', 'ADMIN')")
     @RequestMapping(value = "/userList/", method = RequestMethod.GET)
     public ResponseEntity<List<User>> listAllUsers() {
         List<User> users = userService.findAll();
@@ -30,7 +30,7 @@ public class UserController {
         return new ResponseEntity<List<User>>(users, HttpStatus.OK);
     }
 
-    @PreAuthorize("hasAnyRole('USER', 'admin1')")
+    @PreAuthorize("hasRole('ADMIN')")
     @RequestMapping(value = "/user/{id}", method = RequestMethod.GET, produces = {MediaType.APPLICATION_JSON_VALUE, MediaType.APPLICATION_XML_VALUE})
     public ResponseEntity<User> getUser(@PathVariable("id") int id) {
         System.out.println("Fetching User with id " +  id);
