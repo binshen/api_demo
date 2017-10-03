@@ -20,7 +20,7 @@ public class UserController {
     @Autowired
     UserService userService;
 
-    @PreAuthorize("hasAnyRole('USER', 'admin1')")
+    @PreAuthorize("hasAnyRole('USER', 'admin1')")  //@PreAuthorize("hasRole('USER')")
     @RequestMapping(value = "/userList/", method = RequestMethod.GET)
     public ResponseEntity<List<User>> listAllUsers() {
         List<User> users = userService.findAll();
