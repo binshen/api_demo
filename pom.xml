@@ -26,6 +26,11 @@
 				<enabled>false</enabled>
 			</snapshots>
 		</repository>
+
+		<repository>
+			<id>spring-milestone</id>
+			<url>http://repo.spring.io/libs-release</url>
+		</repository>
 	</repositories>
 
 	<properties>
@@ -79,6 +84,7 @@
 	</dependencies>
 
 	<build>
+		<finalName>api_demo</finalName>
 		<plugins>
 			<plugin>
 				<groupId>org.springframework.boot</groupId>
