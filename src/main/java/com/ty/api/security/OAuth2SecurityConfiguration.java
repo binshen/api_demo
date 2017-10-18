@@ -42,7 +42,7 @@ public class OAuth2SecurityConfiguration extends WebSecurityConfigurerAdapter {
 	@Override
 	protected void configure(AuthenticationManagerBuilder auth) throws Exception{
 		auth.inMemoryAuthentication()
-				.withUser("bill").password("abc123").roles("admin1").and()
+				.withUser("bill").password("abc123").roles("ADMIN").and()
 				.withUser("bob").password("abc123").roles("USER");
 
 //		auth.userDetailsService(userDetailsService).passwordEncoder(new Md5PasswordEncoder());
